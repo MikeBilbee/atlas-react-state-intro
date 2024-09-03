@@ -1,5 +1,6 @@
 // SchoolCatalog.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { EnrolledCoursesContext } from './App';
 
 export default function SchoolCatalog() {
 	const [courses, setCourses] = useState([]);
@@ -10,6 +11,7 @@ export default function SchoolCatalog() {
 	const [sortDirection, setSortDirection] = useState('asc');
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 5;
+	const { enrolledCourses, enrollCourse } = useContext(EnrolledCoursesContext);
 
 	useEffect(()=> {
 		const fetchData = async () => {
@@ -108,7 +110,12 @@ export default function SchoolCatalog() {
 							<td>{course.semesterCredits}</td>
 							<td>{course.totalClockHours}</td>
 							<td>
-								<button>Enroll</button>
+							<button 
+								onClick={() => enrollCourse(course)}
+								disabled={enrolledCourses.some(c => c.id === course.id)} // Disable if already enrolled
+							>
+								Enroll
+							</button>
 							</td>
 						</tr>
 					))}
