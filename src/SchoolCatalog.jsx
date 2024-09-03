@@ -8,6 +8,8 @@ export default function SchoolCatalog() {
 	const [searchQuery, setSearchQuery] = useState('');
 	const [sortBy, setSortBy] = useState(null);
 	const [sortDirection, setSortDirection] = useState('asc');
+	const [currentPage, setCurrentPage] = useState(1);
+	const itemsPerPage = 5;
 
 	useEffect(()=> {
 		const fetchData = async () => {
@@ -57,6 +59,18 @@ export default function SchoolCatalog() {
 		return 0;
 	});
 
+	const indexOfLastItem = currentPage * itemsPerPage;
+	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+	const currentCourses = sortedCourses.slice(indexOfFirstItem, indexOfLastItem);
+
+	const handleNextPage = () => {
+		setCurrentPage(currentPage + 1);
+	};
+
+	const handlePrevPage = () => {
+		setCurrentPage(currentPage - 1);
+	};
+
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
@@ -86,7 +100,7 @@ export default function SchoolCatalog() {
 					</tr>
 				</thead>
 				<tbody>
-					{sortedCourses.map((course) => (
+					{currentCourses.map((course) => (
 						<tr key={course.id}>
 							<td>{course.trimester}</td>
 							<td>{course.courseNumber}</td>
@@ -101,8 +115,12 @@ export default function SchoolCatalog() {
 				</tbody>
 			</table>
 			<div className="pagination">
-				<button>Previous</button>
-				<button>Next</button>
+				<button onClick={handlePrevPage} disabled={currentPage === 1}>
+					Previous
+				</button>
+				<button onClick={handleNextPage} disabled={indexOfLastItem >= sortedCourses.length}>
+					Next
+				</button>
 			</div>
 		</div>
 	);
