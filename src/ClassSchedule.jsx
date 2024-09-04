@@ -1,3 +1,4 @@
+// ClassSchedule.jsx
 import { useContext } from 'react';
 import { EnrolledCoursesContext } from './App';
 

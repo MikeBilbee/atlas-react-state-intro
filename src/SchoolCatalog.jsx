@@ -11,7 +11,7 @@ export default function SchoolCatalog() {
 	const [sortDirection, setSortDirection] = useState('asc');
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 5;
-	const { enrolledCourses, enrollCourse } = useContext(EnrolledCoursesContext);
+	const { enrollCourse } = useContext(EnrolledCoursesContext);
 
 	useEffect(()=> {
 		const fetchData = async () => {
@@ -112,7 +112,6 @@ export default function SchoolCatalog() {
 							<td>
 							<button 
 								onClick={() => enrollCourse(course)}
-								disabled={enrolledCourses.some(c => c.id === course.id)} // Disable if already enrolled
 							>
 								Enroll
 							</button>
