@@ -6,6 +6,8 @@ export default function SchoolCatalog() {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState(null);
     const [sortDirection, setSortDirection] = useState("asc");
+    const [currentPage, setCurrentPage] = useState(1);
+    const coursesPerPage = 5;
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -23,6 +25,7 @@ export default function SchoolCatalog() {
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
+        setCurrentPage(1); // Reset to first page when search term changes
     };
 
     const handleSort = (column) => {
@@ -59,6 +62,17 @@ export default function SchoolCatalog() {
         }
     });
 
+    const indexOfLastCourse = currentPage * coursesPerPage;
+    const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+    const currentCourses = sortedCourses.slice(
+        indexOfFirstCourse,
+        indexOfLastCourse
+    );
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     return (
         <div className="school-catalog">
             <h1>School Catalog</h1>
@@ -90,7 +104,7 @@ export default function SchoolCatalog() {
                     </tr>
                 </thead>
                 <tbody>
-                    {sortedCourses.map((course) => (
+                    {currentCourses.map((course) => (
                         <tr key={course.courseNumber}>
                             <td>{course.trimester}</td>
                             <td>{course.courseNumber}</td>
@@ -105,8 +119,18 @@ export default function SchoolCatalog() {
                 </tbody>
             </table>
             <div className="pagination">
-                <button>Previous</button>
-                <button>Next</button>
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={indexOfLastCourse >= sortedCourses.length}
+                >
+                    Next
+                </button>
             </div>
         </div>
     );
