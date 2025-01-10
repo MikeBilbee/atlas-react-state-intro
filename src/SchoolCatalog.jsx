@@ -1,5 +1,6 @@
 // src/SchoolCatalog.jsx
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { EnrollmentContext } from "./App";
 
 export default function SchoolCatalog() {
     const [courses, setCourses] = useState([]);
@@ -25,7 +26,7 @@ export default function SchoolCatalog() {
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
-        setCurrentPage(1); // Reset to first page when search term changes
+        setCurrentPage(1);
     };
 
     const handleSort = (column) => {
@@ -47,7 +48,7 @@ export default function SchoolCatalog() {
 
     const sortedCourses = [...filteredCourses].sort((a, b) => {
         if (sortBy === null) {
-            return 0; // No sorting
+            return 0;
         }
 
         const aValue = a[sortBy];
@@ -72,6 +73,8 @@ export default function SchoolCatalog() {
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
+
+    const { addCourse } = useContext(EnrollmentContext);
 
     return (
         <div className="school-catalog">
@@ -112,7 +115,9 @@ export default function SchoolCatalog() {
                             <td>{course.semesterCredits}</td>
                             <td>{course.totalClockHours}</td>
                             <td>
-                                <button>Enroll</button>
+                                <button onClick={() => addCourse(course)}>
+                                    Enroll
+                                </button>
                             </td>
                         </tr>
                     ))}
